@@ -38,6 +38,8 @@ if type bat >/dev/null 2>&1; then
     alias cat='bat --style=plain --pager never'
 fi
 
+alias findgrep='find . -type f -print0 | xargs -r0 grep -Hi $@'
+
 # Mac specific aliases, TODO: check for mac or other unix
 # Show/hide hidden files in Finder
 #alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
