@@ -5,11 +5,11 @@ set tabstop=4           "set 1 tab as 4 whitespaces"
 set shiftwidth=4        "< and > adds 4 whitespaces"
 set softtabstop=4       "removes 4 whitespaces on backspace"
 set smartindent         "keeps indention on return"
-set background=dark     "vim tries to use colors that look good on dark background"
 colorscheme solarized
 let g:solarized_termtrans=1
-let g:airline_theme="luna"
-let g:airline_powerline_fonts = 1
+"let g:airline_theme="luna"
+"let g:airline_powerline_fonts = 1
+set background=dark     "vim tries to use colors that look good on dark background"
 set autochdir           "auto changes working directory to current tab"
 set number              "enables line numbers"
 set relativenumber      "shows relative numbers of lines that isn't containing the cursor"cI
@@ -21,12 +21,12 @@ set scrolloff=7         "sets the line where to begin scrolling
 set wildmenu            "shows suggestions for commandline "
 set cursorline          "highlights current line"
 set cursorcolumn        "highlights current column
-set colorcolumn=4,80    "set horizontal ruler
+set colorcolumn=80    "set horizontal ruler
 " Centralize backups, swapfiles and undo history
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 if exists("&undodir")
-	set undodir=~/.vim/undo
+    set undodir=~/.vim/undo
 endif
 " Don’t create backups when editing files in certain directories
 set backupskip=/tmp/*,/private/tmp/*
@@ -49,7 +49,7 @@ set list
 filetype on
 filetype plugin indent on " loads plugin/indent file for filetype
 "set cmdheight=2"
-cmap w!! w !sudo tee > /dev/null % 
+cmap w!! w !sudo tee > /dev/null %
 "sets the corresponding closing bracket"
 inoremap {      {}<Left>
 inoremap (      ()<Left>
