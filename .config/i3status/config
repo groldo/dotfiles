@@ -1,90 +1,40 @@
 general {
         output_format = "i3bar"
-        colors = true
-        color_good = "#859900"
-        color_degraded = "#b58900"
-        color_bad = "#dc322f"
+        colors = false
+        markup = pango
         interval = 5
 }
 
-order += "ethernet eth1"
-order += "memory"
-order += "disk /"
 order += "load"
-order += "tztime local"
-order += "tztime berlin"
 order += "volume master"
-
-wireless wlp2s0 {
-        format_up = "W: (%quality at %essid, %bitrate) %ip"
-        format_down = "W: down"
-}
-
-ethernet eth1 {
-        format_up = "eth1: %ip (%speed)"
-        format_down = "eth1: down"
-}
-
-battery 0 {
-        format = "%status %percentage %remaining %emptytime"
-        format_down = "No battery"
-        status_chr = "⚡ CHR"
-        status_bat = "🔋 BAT"
-        status_unk = "? UNK"
-        status_full = "☻ FULL"
-        path = "/sys/class/power_supply/BAT%d/uevent"
-        low_threshold = 10
-}
-
-run_watch DHCP {
-        pidfile = "/var/run/dhclient*.pid"
-}
-
-run_watch VPNC {
-        # file containing the PID of a vpnc process
-        pidfile = "/var/run/vpnc/pid"
-}
-
-path_exists VPN {
-        # path exists when a VPN tunnel launched by nmcli/nm-applet is active
-        path = "/proc/sys/net/ipv4/conf/tun0"
-}
-
-tztime local {
-        format = "%Y-%m-%d %H:%M:%S"
-        hide_if_equals_localtime = true
-}
-
-tztime berlin {
-        format = "%Y-%m-%d %H:%M:%S %Z"
-        timezone = "Europe/Berlin"
-}
+order += "battery 0"
+order += "time"
 
 load {
-        format = "load: %5min"
-}
-
-cpu_temperature 0 {
-        format = "T: %degrees °C"
-        path = "/sys/devices/platform/coretemp.0/temp1_input"
-}
-
-memory {
-        format = "RAM: %used"
-        threshold_degraded = "10%"
-        format_degraded = "MEMORY: %free"
-}
-
-disk "/" {
-        format = "Disk: %free"
-}
-
-read_file uptime {
-        path = "/proc/uptime"
+        format = "<span background='#b08500'> LOAD </span><span background='#bfbaac'>  %5min  </span>"
 }
 
 volume master {
-    format = "Volume: %volume"
-    format_muted = "Volume: muted (%volume)"
-    device = "pulse:alsa_output.pci-0000_00_1b.0.analog-stereo"
+        format = "<span background='#696ebf'> VOL </span><span background='#bfbaac'>  %volume  </span>"
+        format_muted = "<span background='#696ebf'> VOL </span><span background='#bfbaac'>  Muted  </span>"
+        device = "default"
+        mixer = "Master"
+        mixer_idx = 0
+}
+
+battery 0 {
+        last_full_capacity = true
+        format = "<span background='#819400'>  %status  </span><span background='#bfbaac'>  %percentage  </span>"
+        format_down = "No Battery"
+        status_chr = "CHR"
+        status_bat = "BAT"
+        status_unk = "UNK"
+        status_full = "FULL"
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+        integer_battery_capacity = true
+}
+
+time {
+        format = "<span background='#2587cc'> TIME </span><span background='#bfbaac'>  %b %d at %H:%M  </span>"
 }
