@@ -30,35 +30,4 @@ alias egrep='egrep --color=auto'
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
-# Forces tmux to use 256 colors
-alias tmux='tmux -2'
-
-# If bat exists set alias for cat
-if type bat >/dev/null 2>&1; then
-    alias cat='bat --style=plain --pager never'
-fi
-
 alias findgrep='find . -type f -print0 | xargs -r0 grep -Hi $@'
-
-# Mac specific aliases, TODO: check for mac or other unix
-# Show/hide hidden files in Finder
-#alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-#alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
-
-# Recursively delete `.DS_Store` files
-#alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
-
-# Kill all the tabs in Chrome to free up memory
-# [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
-#alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
-
-# Disable Spotlight
-#alias spotoff="sudo mdutil -a -i off"
-# Enable Spotlight
-#alias spoton="sudo mdutil -a -i on"
-
-# macOS has no `md5sum`, so use `md5` as a fallback
-#command -v md5sum > /dev/null || alias md5sum="md5"
-
-# macOS has no `sha1sum`, so use `shasum` as a fallback
-#command -v sha1sum > /dev/null || alias sha1sum="shasum"
