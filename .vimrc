@@ -1,63 +1,159 @@
-"set nocompatible        "either make vim more vi-compatible or more useful
+"display"
+noh
 syntax on
-set expandtab           "insert 4 whitespace on tab"
-set tabstop=4           "set 1 tab as 4 whitespaces"
-set shiftwidth=4        "< and > adds 4 whitespaces"
-set softtabstop=4       "removes 4 whitespaces on backspace"
-set smartindent         "keeps indention on return"
-colorscheme solarized
-let g:solarized_termtrans=1
-"let g:airline_theme="luna"
-"let g:airline_powerline_fonts = 1
-set background=dark     "vim tries to use colors that look good on dark background"
-set autochdir           "auto changes working directory to current tab"
-set number              "enables line numbers"
-set relativenumber      "shows relative numbers of lines that isn't containing the cursor"cI
-set ignorecase          "ignoring case of search pattern"
-set smartcase           "if case is given it will look for it"
-set hlsearch            "highlighting search"
-set incsearch           "increasing search while typing"
-set scrolloff=7         "sets the line where to begin scrolling
-set wildmenu            "shows suggestions for commandline "
-set cursorline          "highlights current line"
-set cursorcolumn        "highlights current column
-set colorcolumn=80    "set horizontal ruler
-" Centralize backups, swapfiles and undo history
-set backupdir=~/.vim/backups
-set directory=~/.vim/swaps
-if exists("&undodir")
-    set undodir=~/.vim/undo
-endif
-" Don’t create backups when editing files in certain directories
-set backupskip=/tmp/*,/private/tmp/*
-" set highlighting color"
-highlight colorcolumn ctermbg=0
-set showtabline=2
-set showcmd             "show key input while its inputted"
-set laststatus=2        "always shows statusline
-set statusline=     " clear statusline
-set stl+=%F         " add fullpath
-set stl+=\ %y       " add recognized filetype
-set stl+=\ %m       " add modified flag
-set stl+=\ Reg-\":\ %{strpart(@\",0,20)}       " add Register-" content
-"set stl+=\ Reg-\.:\ %{strpart(@\.,0,20)}       " add Register-. content
-set stl+=%=\ Buffer:\ %n\ Line:\ %l/%L\ Column:\ %c  " add column and row numbers
-set stl+=%=\ 0x%02B " add ascii value of char
-hi StatusLine ctermbg=0 ctermfg=253
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+set t_Co=16
+set background=dark
+set lazyredraw
+set encoding=utf-8
 set list
+set listchars=tab:\│\ 
+set listchars+=trail:•
+set fillchars=eob:\ 
+set fillchars+=vert:\ 
+set matchpairs+=<:>
+set nowrap
+set cursorline
+set modelines=0
+set showcmd
+set cmdheight=1
+set laststatus=2
+set showtabline=1
+set scrolloff=8
+set ruler
+set number
+
+"behavior"
 filetype on
-filetype plugin indent on " loads plugin/indent file for filetype
-"set cmdheight=2"
-cmap w!! w !sudo tee > /dev/null %
-"sets the corresponding closing bracket"
-inoremap {      {}<Left>
-inoremap (      ()<Left>
-inoremap "      ""<Left>
-inoremap '      ''<Left>
-"remappings
-"insert blank line with enter without entering insert mode
-nmap <S-Enter> O<Esc>
-nmap <CR> o<Esc>
-"execute script in the shell
-nnoremap <F9> :!%:p<CR>
+filetype plugin on
+set nocompatible
+set backspace=indent,eol,start
+set formatoptions=tqn1
+set magic
+
+"tabulation"
+set copyindent
+set preserveindent
+set softtabstop=0
+set shiftwidth=4
+set tabstop=4
+set noexpandtab
+set noshiftround
+
+"searching"
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+"autopair without autopair plugin"
+inoremap ( ()<Left>
+inoremap { {}<Left>
+inoremap [ []<Left>
+inoremap " ""<Left>
+inoremap ' ''<Left>
+
+"some useful command in command mode"
+command Shredcomment :g/^\(#\|$\)/d
+command Realtab :%s/    /\t/g
+command Reducespace :%s/  / /g
+
+"colorscheme without colorscheme plugin"
+hi linenr ctermfg=0
+hi cursorline ctermbg=NONE ctermfg=NONE cterm=NONE
+hi cursorlinenr ctermbg=NONE ctermfg=NONE cterm=NONE
+hi comment ctermfg=8
+hi pmenu ctermbg=0 ctermfg=NONE
+hi pmenusel ctermbg=4 ctermfg=0
+hi pmenusbar ctermbg=0
+hi pmenuthumb ctermbg=7
+hi matchparen ctermbg=0 ctermfg=NONE
+hi search ctermbg=0 ctermfg=NONE
+hi vertsplit ctermbg=0 ctermfg=0 cterm=NONE
+hi tablinefill ctermbg=NONE ctermfg=NONE cterm=NONE
+hi tabline ctermbg=NONE ctermfg=0
+hi tablinesel ctermbg=6 ctermfg=7
+hi group1 ctermbg=NONE ctermfg=0
+hi group2 ctermbg=NONE ctermfg=0
+match group1 /\s\+$/
+match group2 /\t/
+
+"tab autocomplete without autocomplete plugin"
+inoremap <expr> <Tab> TabComplete()
+fun! TabComplete()
+if getline('.')[col('.') - 2] =~ '\K' || pumvisible()
+return "\<C-P>"
+else
+return "\<Tab>"
+endif
+endfun
+set completeopt=menu,menuone,noinsert
+inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+autocmd InsertCharPre * call AutoComplete()
+fun! AutoComplete()
+if v:char =~ '\K'
+\ && getline('.')[col('.') - 4] !~ '\K'
+\ && getline('.')[col('.') - 3] =~ '\K'
+\ && getline('.')[col('.') - 2] =~ '\K'
+\ && getline('.')[col('.') - 1] !~ '\K'
+call feedkeys("\<C-P>", 'n')
+end
+endfun
+
+set completeopt+=menuone
+set completeopt+=noselect
+set shortmess+=c
+set belloff+=ctrlg
+
+"statusline without statusline plugin"
+let g:currentmode={
+\ 'n'  : 'Normal ',
+\ 'no' : 'N·Operator Pending ',
+\ 'v'  : 'Visual ',
+\ 'V'  : 'V·Line ',
+\ 'x22' : 'V·Block ',
+\ 's'  : 'Select ',
+\ 'S'  : 'S·Line ',
+\ 'x19' : 'S·Block ',
+\ 'i'  : 'Insert ',
+\ 'R'  : 'Replace ',
+\ 'Rv' : 'V·Replace ',
+\ 'c'  : 'Command ',
+\ 'cv' : 'Vim Ex ',
+\ 'ce' : 'Ex ',
+\ 'r'  : 'Prompt ',
+\ 'rm' : 'More ',
+\ 'r?' : 'Confirm ',
+\ '!'  : 'Shell ',
+\ 't'  : 'Terminal '
+\}
+
+hi user1 ctermbg=1 ctermfg=0
+hi user2 ctermbg=4 ctermfg=0
+hi user3 ctermbg=0 ctermfg=NONE
+hi user4 ctermbg=NONE ctermfg=NONE
+hi statusline ctermbg=0 ctermfg=NONE
+hi statuslinenc ctermbg=0 ctermfg=0
+
+function! Changestatuslinecolor()
+if (mode() =~# '\v(n|no)')
+exe 'hi! user1 ctermbg=1 ctermfg=0'
+elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'Visual Block' || get(g:currentmode, mode(), '') ==# 't')
+exe 'hi! user1 ctermbg=5 ctermfg=0'
+elseif (mode() ==# 'i')
+exe 'hi! user1 ctermbg=2 ctermfg=0'
+elseif (mode() ==# 'R')
+exe 'hi! user1 ctermbg=3 ctermfg=0'
+else
+exe 'hi! user1 ctermbg=1 ctermfg=0'
+endif
+return ''
+endfunction
+
+set statusline=
+set statusline+=%{Changestatuslinecolor()}
+set statusline+=%1*\ %{g:currentmode[mode()]}
+set statusline+=%3*\ %f\ %4*\ 
+set statusline+=%=\ 
+set statusline+=%3*\ %l\ of\ %L\ %2*\ 
+set statusline+=%2*%{&filetype}\ 
+set noshowmode
