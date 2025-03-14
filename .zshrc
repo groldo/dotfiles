@@ -66,7 +66,7 @@ bindkey "^[[1;5D" backward-word
 autoload -Uz vcs_info
 autoload -U colors && colors
 zstyle ':vcs_info:*' enable git svn
-zstyle ':vcs_info:git*' formats "%s %r/%S %b (%a) %m%u%c"
+zstyle ':vcs_info:git*' formats "%s(%b)"
 
 # colors
 # https://jonasjacek.github.io/colors/
@@ -97,18 +97,20 @@ setopt prompt_subst
 precmd() {
     vcs_info
     if [[ -n $VIRTUAL_ENV ]]; then
-        PRE_PROMPT="(`basename \"$VIRTUAL_ENV\"`) ${WHITE}%(?..%B(%?%) %b)"
+        #PRE_PROMPT="(`basename \"$VIRTUAL_ENV\"`) ${WHITE}%(?..%B(%?%) %b)"
+        RPROMPT="(`basename \"$VIRTUAL_ENV\"`)"
     else
-        PRE_PROMPT="${WHITE}%(?..%B(%?%) %b)"
+        #PRE_PROMPT="${WHITE}%(?..%B(%?%) %b)"
+        RPROMPT=""
     fi
     if [[ -n ${vcs_info_msg_0_} ]]; then
         # vcs_info found something (the documentation got that backwards
         # STATUS line taken from https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/git.zsh
         STATUS=$(command git status --porcelain 2> /dev/null | tail -n1)
         if [[ -n $STATUS ]]; then
-            PROMPT='${PRE_PROMPT}${DEFAULT_PROMPT} ${WHITE}on branch ${STEELBLUEONE}${vcs_info_msg_0_}${WHITE}got ${DEEPSKYONE}changes ${COMMAND}'
+            PROMPT='${PRE_PROMPT}${DEFAULT_PROMPT}${WHITE} on ${STEELBLUEONE}${vcs_info_msg_0_}${WHITE} got ${DEEPSKYONE}changes ${COMMAND}'
         else
-            PROMPT='${PRE_PROMPT}${DEFAULT_PROMPT} ${WHITE}on branch ${STEELBLUEONE}${vcs_info_msg_0_}${WHITE}got no changes ${COMMAND}'
+            PROMPT='${PRE_PROMPT}${DEFAULT_PROMPT}${WHITE} on ${STEELBLUEONE}${vcs_info_msg_0_}${WHITE}${COMMAND}'
         fi
     else
         # nothing from vcs_info
